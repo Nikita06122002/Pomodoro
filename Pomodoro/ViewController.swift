@@ -10,6 +10,8 @@ import AVFoundation
 
 class ViewController: UIViewController {
     
+    private let realm = RealmManager.shared.realm
+    
     private let tomato = UIImageView(image: UIImage(named: "tomat")!)
     private let button = UIButton()
     private lazy var time: UILabel = {
@@ -25,14 +27,15 @@ class ViewController: UIViewController {
     private var player = AVAudioPlayer()
     
     private var timeModel = Time()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupView()
         setupConst()
         
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        print(RealmManager.shared.realm.configuration.fileURL)
     }
     
     private func setupView() {
@@ -47,7 +50,7 @@ class ViewController: UIViewController {
         button.backgroundColor = UIColor(named: "lightPurple")
         button.layer.cornerRadius = 15
     }
-
+    
     private func setupConst() {
         tomato.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -78,74 +81,89 @@ class ViewController: UIViewController {
     }
     
     @objc private func buttonTapped(_ sender: UIButton) {
+        
+        time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.duration)
+        progressView.progress = 0
+        
         if sender.title(for: .normal) == "Запуск" {
             button.setTitle("Стоп", for: .normal)
-            resetTimer()
+            
+            timeModel.resetTimer()
+            
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+            
         } else {
+            
             button.setTitle("Запуск", for: .normal)
+            
             timer.invalidate()
-            resetTimer()
             
-            
+            timeModel.resetTimer()
         }
-       
     }
+    
     
     @objc private func updateTimer() {
         if timeModel.remainingTime > 0 {
-            timeModel.remainingTime -= 1
-            timeModel.passedTime += 1
             
-            let progress = Float(timeModel.passedTime) / Float(timeModel.duration)
+            timeModel.start()
+            
+            let progress = timeModel.getProgress()
+            
             progressView.setProgress(progress, animated: true)
             
-            updateLabelWithTime(timeInterval: timeModel.remainingTime)
+            time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.remainingTime)
             
-          } else if timeModel.completedSessions < 5 && timeModel.breakDuration > 0 {
-              if !timeModel.soundPlayedForBreak {
-                  playSound()
-                  timeModel.soundPlayedForBreak = true
-              }
-              // Логика короткого перерыва
-            timeModel.breakDuration -= 1
-            let breakProgress = Float(1.0) - (Float(timeModel.breakDuration) / Float(2 * 60)) // 5 минут - начальная длительность
-            progressView.setProgress(breakProgress, animated: true)
-            updateLabelWithTime(timeInterval: timeModel.breakDuration)
-        } else if timeModel.completedSessions == 5 && timeModel.longBreakDuration > 0 {
-            if !timeModel.soundPlayedForLongBreak {
+            //MARK: -  Логика короткого перерыва
+        } else if timeModel.completedSessions < 5 && timeModel.breakDuration > 0 {
+            
+            if !timeModel.soundPlayedForBreak && !timeModel.breakSessionSaved && !timeModel.sessionComplete {
+                
                 playSound()
-                timeModel.soundPlayedForBreak = true
+                
+                timeModel.completeSession()
+                
             }
-            // Логика длинного перерыва
-            timeModel.longBreakDuration -= 1
-            let longBreakProgress = Float(1.0) - (Float(timeModel.longBreakDuration) / Float(3 * 60)) // 15 минут - начальная длительность
+            
+            timeModel.startFiveMin()
+            
+            let progress = timeModel.getFiveMinProgress()
+            
+            progressView.setProgress(progress, animated: true)
+            
+            time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.breakDuration)
+            
+            //MARK: - Логика длинного перерыва
+        } else if timeModel.completedSessions == 5 && timeModel.longBreakDuration > 0 {
+            
+            if !timeModel.soundPlayedForLongBreak && !timeModel.breakSessionSaved && !timeModel.sessionComplete {
+                
+                playSound()
+                
+                timeModel.completeSession()
+            }
+            
+            timeModel.startFifteenMin()
+            
+            let longBreakProgress = timeModel.getFifteenMinProgress()
+            
             progressView.setProgress(longBreakProgress, animated: true)
-            updateLabelWithTime(timeInterval: timeModel.longBreakDuration)
+            
+            time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.longBreakDuration)
+            
+            //MARK: - Остановка таймера и сброс
         } else {
             if timeModel.soundPlayedForSessionEnd {
                 playSound()
-                timeModel.soundPlayedForSessionEnd = true
+                timeModel.endSound()
             }
             timer.invalidate()
-            // Сброс или подготовка к новому циклу
         }
     }
     
-    private func updateLabelWithTime(timeInterval: TimeInterval) {
-        let minutes = Int(timeInterval) / 60
-        let seconds = Int(timeInterval) % 60
-        time.text = String(format: "%02d:%02d", minutes, seconds)
-
-    }
     
-    private func resetTimer() {
-        timeModel.remainingTime = timeModel.duration
-        timeModel.passedTime = 0
-        timeModel.breakDuration = 5 * 60 // или ваше начальное значение
-        timeModel.longBreakDuration = 15 * 60 // или ваше начальное значение
-        progressView.progress = 0
-        updateLabelWithTime(timeInterval: timeModel.duration)
+    private func saveSession() {
+        RealmManager.shared.save(word: timeModel)
     }
     
     private func playSound() {
@@ -159,10 +177,10 @@ class ViewController: UIViewController {
             }
         } else {
             print("URL for sound not found.")
-
+            
         }
     }
-
+    
 }
 
 
