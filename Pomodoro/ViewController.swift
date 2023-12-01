@@ -12,7 +12,14 @@ class ViewController: UIViewController {
     
     private let tomato = UIImageView(image: UIImage(named: "tomat")!)
     private let button = UIButton()
-    private let time = UILabel()
+    private lazy var time: UILabel = {
+        let label = UILabel()
+        let minutes = Int(timeModel.duration) / 60
+        let seconds = Int(timeModel.duration) % 60
+        label.text = String(format: "%02d:%02d", minutes, seconds)
+        label.font = .boldSystemFont(ofSize: 30)
+        return label
+    }()
     private let progressView = UIProgressView()
     private var timer = Timer()
     private var player = AVAudioPlayer()
@@ -33,15 +40,12 @@ class ViewController: UIViewController {
         view.addSubview(button)
         view.addSubview(time)
         view.addSubview(progressView)
-        progressView.progress = 0.5
+        progressView.progress = 0
         view.backgroundColor = UIColor(named: "light")
         button.setTitle("Запуск", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 30)
         button.backgroundColor = UIColor(named: "lightPurple")
         button.layer.cornerRadius = 15
-        
-        time.text = String(format: "%02d:%02d", timeModel.duration / 60)
-        time.font = .boldSystemFont(ofSize: 30)
     }
 
     private func setupConst() {
