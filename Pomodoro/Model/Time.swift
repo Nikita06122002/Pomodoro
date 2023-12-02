@@ -13,12 +13,14 @@ class Time: Object {
     
     @Persisted(primaryKey: true) var _id: String = UUID().uuidString
     
-    @Persisted var duration: TimeInterval = 25 * 60 // 25 минут
-    @Persisted var breakDuration: TimeInterval = 5 * 60 // 5 минут
-    @Persisted var longBreakDuration: TimeInterval = 15 * 60 // 15 минут
+    @Persisted var duration: TimeInterval = 0.1 * 60 // 25 минут
+    @Persisted var breakDuration: TimeInterval = 0.2 * 60 // 5 минут
+    @Persisted var longBreakDuration: TimeInterval = 0.3 * 60 // 15 минут
     @Persisted var remainingTime: TimeInterval //времени прошло
     @Persisted var passedTime: TimeInterval = 0
     @Persisted var completedSessions: Int = 0
+    
+
     
     @Persisted var soundPlayedForBreak: Bool = false
     @Persisted var soundPlayedForLongBreak: Bool = false
@@ -33,6 +35,15 @@ class Time: Object {
     override init() {
         super.init()
         self.remainingTime = duration
+
+    }
+    
+    func resetShortBreakDuration() {
+        RealmManager.shared.resetShortBreakDuration(time: self)
+    }
+
+    func resetLongBreakDuration() {
+        RealmManager.shared.resetLongBreakDuration(time: self)
     }
     
     func getProgress() -> Float {
@@ -40,33 +51,37 @@ class Time: Object {
         return progress
     }
     
+    func startNewSession() {
+        RealmManager.shared.startSession(time: self)
+    }
+    
     func start() {
-        remainingTime -= 1
-        passedTime += 1
+        RealmManager.shared.updateTimer(time: self)
     }
     
     func completeSession() {
-        completedSessions += 1
-        sessionComplete = true
-        breakSessionSaved = true
-        soundPlayedForBreak = true
+        RealmManager.shared.completedSession(time: self)
     }
     
+ 
+    
     func startFiveMin() {
-        breakDuration -= 1
+        RealmManager.shared.startFiveMin(time: self)
     }
     
     func getFiveMinProgress() -> Float {
-        let breakProgress = Float(1.0) - (Float(breakDuration) / Float(0.5 * 60))
+        let breakProgress = Float(1.0) - (Float(breakDuration) / Float(0.2 * 60))
         return breakProgress
     }
     
     func startFifteenMin() {
-        longBreakDuration -= 1
+        RealmManager.shared.startFifteenMin(time: self)
     }
     
+
+    
     func getFifteenMinProgress() -> Float {
-        let longBreakProgress = Float(1.0) - (Float(longBreakDuration) / Float(0.5 * 60))
+        let longBreakProgress = Float(1.0) - (Float(longBreakDuration) / Float(0.3 * 60))
         return longBreakProgress
     }
     
@@ -80,16 +95,11 @@ class Time: Object {
     }
     
     func endSound() {
-        soundPlayedForSessionEnd = true
+        RealmManager.shared.endSound(time: self)
     }
     
+
     func resetTimer() {
-        remainingTime = duration
-        passedTime = 0
-        breakDuration = 5 * 60
-        longBreakDuration = 15 * 60
-        sessionComplete = false
-        soundPlayedForBreak = false
-        breakSessionSaved = false
+        RealmManager.shared.resetTimer(time: self)
     }
 }

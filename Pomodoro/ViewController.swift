@@ -10,7 +10,7 @@ import AVFoundation
 
 class ViewController: UIViewController {
     
-    private let realm = RealmManager.shared.realm
+    private let realm = RealmManager.shared
     
     private let tomato = UIImageView(image: UIImage(named: "tomat")!)
     private let button = UIButton()
@@ -27,6 +27,8 @@ class ViewController: UIViewController {
     private var player = AVAudioPlayer()
     
     private var timeModel = Time()
+    private var count = 0
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +37,7 @@ class ViewController: UIViewController {
         setupConst()
         
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        print(RealmManager.shared.realm.configuration.fileURL)
+//        print(RealmManager.shared.realm.configuration.fileURL)
     }
     
     private func setupView() {
@@ -90,7 +92,7 @@ class ViewController: UIViewController {
             
             timeModel.resetTimer()
             
-            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update), userInfo: nil, repeats: true)
             
         } else {
             
@@ -98,72 +100,169 @@ class ViewController: UIViewController {
             
             timer.invalidate()
             
-            timeModel.resetTimer()
+            stopTimer()
         }
     }
     
+//    @objc private func updateTimer() {
+//        if timeModel.remainingTime > 0 {
+//            //MARK: - Начало сессии
+//            startSession()
+//            
+//        } else if timeModel.completedSessions < 5 && timeModel.breakDuration > 0 {
+//            //MARK: - Логика короткого перерыва
+//            shortBreak()
+//            
+//            //MARK: - Проверяем, заканчивается ли короткий перерыв
+//            isShortBreakEnd()
+//            
+//
+//        } else if timeModel.completedSessions == 5 && timeModel.longBreakDuration > 0 {
+//            //MARK: - Проверяем, заканчивается ли длинный перерыв
+//            isLongBreakEnd()
+//            //MARK: - Логика длинного перерыва
+//            longBreak()
+//
+//        } else {
+//            //MARK: - Остановка таймера и сброс
+//            stopTimer()
+//        }
+//    }
     
-    @objc private func updateTimer() {
+//    @objc private func update() {
+//        
+//        if timeModel.remainingTime > 0 {
+//            startSession()
+//            
+//        } else if timeModel.breakDuration > 0 && count % 5 != 0 {
+//            if !timeModel.soundPlayedForBreak && !timeModel.sessionComplete {
+//                playSound()
+//                timeModel.completeSession()
+//                count += 1
+//                realm.save(word: timeModel)
+//            }
+//            shortBreak()
+//            isShortBreakEnd()
+//        } else if count % 5 == 0 {
+//            if !timeModel.soundPlayedForBreak && !timeModel.sessionComplete {
+//                playSound()
+//                timeModel.completeSession()
+//                count += 1
+//                realm.save(word: timeModel)
+//            }
+//            longBreak()
+//            isLongBreakEnd()
+//        }
+//    }
+    
+    @objc private func update() {
         if timeModel.remainingTime > 0 {
-            
-            timeModel.start()
-            
-            let progress = timeModel.getProgress()
-            
-            progressView.setProgress(progress, animated: true)
-            
-            time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.remainingTime)
-            
-            //MARK: -  Логика короткого перерыва
-        } else if timeModel.completedSessions < 5 && timeModel.breakDuration > 0 {
-            
-            if !timeModel.soundPlayedForBreak && !timeModel.breakSessionSaved && !timeModel.sessionComplete {
-                
+            startSession()
+            if timeModel.remainingTime == 0 {
+                count += 1
+                print(count)
+            }
+        } else if count % 5 != 0 {
+            if !timeModel.soundPlayedForBreak && !timeModel.sessionComplete {
                 playSound()
-                
                 timeModel.completeSession()
-                
+                realm.save(word: timeModel)
             }
-            
-            timeModel.startFiveMin()
-            
-            let progress = timeModel.getFiveMinProgress()
-            
-            progressView.setProgress(progress, animated: true)
-            
-            time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.breakDuration)
-            
-            //MARK: - Логика длинного перерыва
-        } else if timeModel.completedSessions == 5 && timeModel.longBreakDuration > 0 {
-            
-            if !timeModel.soundPlayedForLongBreak && !timeModel.breakSessionSaved && !timeModel.sessionComplete {
-                
+            // Здесь логика короткого перерыва
+            shortBreak()
+            if timeModel.breakDuration == 0 {
+                isShortBreakEnd()
+            }
+        } else if count % 5 == 0 {
+            if !timeModel.soundPlayedForBreak && !timeModel.sessionComplete {
                 playSound()
-                
                 timeModel.completeSession()
+                realm.save(word: timeModel)
             }
-            
-            timeModel.startFifteenMin()
-            
-            let longBreakProgress = timeModel.getFifteenMinProgress()
-            
-            progressView.setProgress(longBreakProgress, animated: true)
-            
-            time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.longBreakDuration)
-            
-            //MARK: - Остановка таймера и сброс
-        } else {
-            if timeModel.soundPlayedForSessionEnd {
-                playSound()
-                timeModel.endSound()
+            // Здесь логика длинного перерыва
+            longBreak()
+            if timeModel.longBreakDuration == 0 {
+               isLongBreakEnd()
             }
-            timer.invalidate()
         }
     }
     
+
     
-    private func saveSession() {
-        RealmManager.shared.save(word: timeModel)
+    private func startSession() {
+        timeModel.start()
+        print("start session")
+        let progress = timeModel.getProgress()
+
+        progressView.setProgress(progress, animated: true)
+        time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.remainingTime)
+    }
+    
+    
+    private func isShortBreakEnd() {
+        if timeModel.breakDuration == 0 {
+            timeModel.resetShortBreakDuration()
+            timeModel.startNewSession()   // Начинаем новую сессию работы
+            timer.invalidate()
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+            print("короткий перерыв закончен")
+            return
+        }
+    }
+
+    
+    private func shortBreak() {
+        if !timeModel.soundPlayedForBreak && !timeModel.breakSessionSaved && !timeModel.sessionComplete {
+            print(timeModel.soundPlayedForBreak && timeModel.breakSessionSaved && timeModel.sessionComplete)
+            playSound()
+            timeModel.completeSession()
+            realm.save(word: timeModel)
+        }
+        timeModel.startFiveMin()
+        print("перерыв 5 мин")
+
+        let progress = timeModel.getFiveMinProgress()
+        progressView.setProgress(progress, animated: true)
+        time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.breakDuration)
+    }
+    
+    private func isLongBreakEnd() {
+        if timeModel.longBreakDuration == 0 { // Проверяем, заканчивается ли длинный перерыв
+            print("короткий перерыв закончен")
+            timeModel.resetLongBreakDuration()
+            timer.invalidate()
+            timeModel.startNewSession() // Начинаем новую сессию работы
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+            return
+        }
+    }
+    
+    private func longBreak() {
+        
+        if !timeModel.soundPlayedForLongBreak && !timeModel.breakSessionSaved && !timeModel.sessionComplete {
+            print(timeModel.soundPlayedForBreak && timeModel.breakSessionSaved && timeModel.sessionComplete)
+            playSound()
+            timeModel.completeSession()
+            realm.save(word: timeModel)
+        }
+
+        timeModel.startFifteenMin()
+        print("Длинный перерыв")
+        let longBreakProgress = timeModel.getFifteenMinProgress()
+        progressView.setProgress(longBreakProgress, animated: true)
+        time.text = timeModel.updateLabelWithTime(timeInterval: timeModel.longBreakDuration)
+    }
+    
+    
+    private func stopTimer() {
+        
+        if !timeModel.soundPlayedForSessionEnd {
+            playSound()
+            timeModel.endSound()
+        }
+        print("stop timer")
+        timer.invalidate()
+        timeModel.resetTimer()
     }
     
     private func playSound() {
