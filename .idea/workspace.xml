@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1671cc4b-4377-4ec6-816e-78826813cee7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pomodoro.xcodeproj/project.xcworkspace/xcuserdata/macbook.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/Pomodoro.xcodeproj/project.xcworkspace/xcuserdata/macbook.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pomodoro/ViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pomodoro/ViewController.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +46,7 @@
       <workItem from="1701452771141" duration="113000" />
       <workItem from="1701457391249" duration="155000" />
       <workItem from="1701457548841" duration="948000" />
+      <workItem from="1701625003492" duration="8000" />
     </task>
     <task id="LOCAL-00001" summary="configure Layout, model, set up the logic">
       <created>1701452808877</created>
@@ -90,7 +93,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="#3_Saving_to_Realm" />
+                        <option value="#4_Refactoring" />
                       </list>
                     </value>
                   </entry>

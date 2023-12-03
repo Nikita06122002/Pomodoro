@@ -10,11 +10,13 @@
 		FA239A822B1A36E700E8C51A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA239A812B1A36E700E8C51A /* AppDelegate.swift */; };
 		FA239A842B1A36E700E8C51A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA239A832B1A36E700E8C51A /* SceneDelegate.swift */; };
 		FA239A862B1A36E700E8C51A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA239A852B1A36E700E8C51A /* ViewController.swift */; };
-		FA239A892B1A36E700E8C51A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA239A872B1A36E700E8C51A /* Main.storyboard */; };
 		FA239A8B2B1A36E800E8C51A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA239A8A2B1A36E800E8C51A /* Assets.xcassets */; };
 		FA239A8E2B1A36E800E8C51A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA239A8C2B1A36E800E8C51A /* LaunchScreen.storyboard */; };
 		FA239A972B1A392900E8C51A /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA239A962B1A392900E8C51A /* Time.swift */; };
 		FA239A992B1A4BF900E8C51A /* time.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FA239A982B1A4BF900E8C51A /* time.mp3 */; };
+		FA775F8D2B1CF51A00AA1011 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA775F8C2B1CF51A00AA1011 /* TimerView.swift */; };
+		FA775F902B1CF78C00AA1011 /* TimerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA775F8F2B1CF78C00AA1011 /* TimerViewDelegate.swift */; };
+		FA775F972B1D042D00AA1011 /* Sessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA775F962B1D042D00AA1011 /* Sessions.swift */; };
 		FADE26642B1A66EF00AE9827 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = FADE26632B1A66EF00AE9827 /* Realm */; };
 		FADE26662B1A66EF00AE9827 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FADE26652B1A66EF00AE9827 /* RealmSwift */; };
 		FADE26692B1A66FC00AE9827 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADE26682B1A66FC00AE9827 /* RealmManager.swift */; };
@@ -25,12 +27,14 @@
 		FA239A812B1A36E700E8C51A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA239A832B1A36E700E8C51A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FA239A852B1A36E700E8C51A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		FA239A882B1A36E700E8C51A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FA239A8A2B1A36E800E8C51A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA239A8D2B1A36E800E8C51A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA239A8F2B1A36E800E8C51A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA239A962B1A392900E8C51A /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		FA239A982B1A4BF900E8C51A /* time.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = time.mp3; sourceTree = "<group>"; };
+		FA775F8C2B1CF51A00AA1011 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		FA775F8F2B1CF78C00AA1011 /* TimerViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewDelegate.swift; sourceTree = "<group>"; };
+		FA775F962B1D042D00AA1011 /* Sessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sessions.swift; sourceTree = "<group>"; };
 		FADE26682B1A66FC00AE9827 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,26 +70,68 @@
 		FA239A802B1A36E700E8C51A /* Pomodoro */ = {
 			isa = PBXGroup;
 			children = (
+				FA239A952B1A391F00E8C51A /* Models */,
+				FA775F8B2B1CF4CF00AA1011 /* Views */,
+				FA775F932B1D03C800AA1011 /* Controllers */,
+				FA775F8E2B1CF78000AA1011 /* Protocols */,
 				FADE26672B1A66F400AE9827 /* Realm */,
-				FA239A952B1A391F00E8C51A /* Model */,
-				FA239A812B1A36E700E8C51A /* AppDelegate.swift */,
-				FA239A832B1A36E700E8C51A /* SceneDelegate.swift */,
-				FA239A852B1A36E700E8C51A /* ViewController.swift */,
+				FA775F942B1D03E900AA1011 /* App */,
+				FA775F952B1D03FD00AA1011 /* Support */,
 				FA239A982B1A4BF900E8C51A /* time.mp3 */,
-				FA239A872B1A36E700E8C51A /* Main.storyboard */,
-				FA239A8A2B1A36E800E8C51A /* Assets.xcassets */,
-				FA239A8C2B1A36E800E8C51A /* LaunchScreen.storyboard */,
 				FA239A8F2B1A36E800E8C51A /* Info.plist */,
 			);
 			path = Pomodoro;
 			sourceTree = "<group>";
 		};
-		FA239A952B1A391F00E8C51A /* Model */ = {
+		FA239A952B1A391F00E8C51A /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				FA239A962B1A392900E8C51A /* Time.swift */,
+				FA775F962B1D042D00AA1011 /* Sessions.swift */,
 			);
-			path = Model;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FA775F8B2B1CF4CF00AA1011 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FA775F8C2B1CF51A00AA1011 /* TimerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FA775F8E2B1CF78000AA1011 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				FA775F8F2B1CF78C00AA1011 /* TimerViewDelegate.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		FA775F932B1D03C800AA1011 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FA239A852B1A36E700E8C51A /* ViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		FA775F942B1D03E900AA1011 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FA239A812B1A36E700E8C51A /* AppDelegate.swift */,
+				FA239A832B1A36E700E8C51A /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		FA775F952B1D03FD00AA1011 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				FA239A8A2B1A36E800E8C51A /* Assets.xcassets */,
+				FA239A8C2B1A36E800E8C51A /* LaunchScreen.storyboard */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 		FADE26672B1A66F400AE9827 /* Realm */ = {
@@ -164,7 +210,6 @@
 				FA239A8E2B1A36E800E8C51A /* LaunchScreen.storyboard in Resources */,
 				FA239A992B1A4BF900E8C51A /* time.mp3 in Resources */,
 				FA239A8B2B1A36E800E8C51A /* Assets.xcassets in Resources */,
-				FA239A892B1A36E700E8C51A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,10 +220,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA775F972B1D042D00AA1011 /* Sessions.swift in Sources */,
 				FA239A972B1A392900E8C51A /* Time.swift in Sources */,
+				FA775F902B1CF78C00AA1011 /* TimerViewDelegate.swift in Sources */,
 				FA239A862B1A36E700E8C51A /* ViewController.swift in Sources */,
 				FADE26692B1A66FC00AE9827 /* RealmManager.swift in Sources */,
 				FA239A822B1A36E700E8C51A /* AppDelegate.swift in Sources */,
+				FA775F8D2B1CF51A00AA1011 /* TimerView.swift in Sources */,
 				FA239A842B1A36E700E8C51A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -186,14 +234,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		FA239A872B1A36E700E8C51A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FA239A882B1A36E700E8C51A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		FA239A8C2B1A36E800E8C51A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -335,7 +375,6 @@
 				INFOPLIST_FILE = Pomodoro/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -362,7 +401,6 @@
 				INFOPLIST_FILE = Pomodoro/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
