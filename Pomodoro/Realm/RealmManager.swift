@@ -62,6 +62,8 @@ final class RealmManager {
     }
     
     
+    //MARK: - TimeModel
+    
     func startSession(time: Time) {
         do {
             try realm .write {
@@ -75,7 +77,7 @@ final class RealmManager {
             }
         } catch {
             print("Error completing session: \(error.localizedDescription)")
-
+            
         }
     }
     
@@ -149,7 +151,7 @@ final class RealmManager {
             print("Error completing session: \(error.localizedDescription)")
         }
     }
- 
+    
     
     
     
@@ -162,10 +164,10 @@ final class RealmManager {
             }
         } catch {
             print("Error completing session: \(error.localizedDescription)")
-
+            
         }
     }
-
+    
     func resetLongBreakDuration(time: Time) {
         do {
             try realm .write {
@@ -173,11 +175,22 @@ final class RealmManager {
             }
         } catch {
             print("Error completing session: \(error.localizedDescription)")
-
+            
         }
+        
     }
     
     
-    
+    //MARK: - SessionModel
+
+    func updateSessionsCount(session: Sessions, count: Int) {
+        do {
+            try realm .write {
+                session.completesSession += count
+            }
+        } catch {
+            print("Error completing session: \(error.localizedDescription)")
+        }
+    }
     
 }
